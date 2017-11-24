@@ -12,7 +12,7 @@ class WelcomeToBook extends Mailable
     use Queueable, SerializesModels;
 
     public $m3_email;
-    public $subject = '账号激活-凯恩书店';
+    public $subject = '账号激活-优客书店';
     /**
      * Create a new message instance.
      *

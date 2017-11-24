@@ -23,6 +23,7 @@ class MemberController extends Controller
         $phone_code = $request->input('phone_code', '');
         $validate_code = $request->input('validate_code', '');
         $m3_result = new M3Result();
+
         $member = Member::where('email',$email)->orWhere('phone',$phone)->first();
         if($member) {
             $m3_result->status = 5;
@@ -93,6 +94,7 @@ class MemberController extends Controller
             }
 
             $validate_code_session = $request->session()->get('validate_code', '');
+
             if ($validate_code_session != $validate_code) {
                 $m3_result->status = 8;
                 $m3_result->message = '验证码不正确';
@@ -108,8 +110,8 @@ class MemberController extends Controller
             //使用M3Email这个类
             $m3_email = new M3Email();
             $m3_email->to = $email;
-            $m3_email->cc = 'yqj666888@yeah.net';
-            $m3_email->subject = '凯恩书店';
+            $m3_email->cc = 'yqj666888@qq.com';
+            $m3_email->subject = '优客书店';
             $m3_email->content = '请于24小时点击该链接完成验证http://'.$_SERVER['SERVER_NAME'].'/api/service/validate_email'
                 . '?member_id=' . $member->id
                 . '&code=' . $uuid;;
@@ -133,12 +135,11 @@ class MemberController extends Controller
         $password = $request->get('password', '');
         $validate_code = $request->get('validate_code', '');
         $m3_result = new M3Result();
-        if ($validate_code != $request->session()->get('validate_code')) {
+        if ($validate_code != $request->session()->get('validate_code') || $validate_code == "") {
             $m3_result->status = 4;
             $m3_result->message = '验证码不正确。';
             return $m3_result->toJson();
         }
-
         $member = null;
         if (strpos($username, '@') == true) {
             $member = Member::where('email', $username)->first();
@@ -150,7 +151,7 @@ class MemberController extends Controller
             $m3_result->message = '该用户不存在';
             return $m3_result->toJson();
         } else {
-            if (strpos($username, '@') == true && $member->cative == 0) {
+            if (strpos($username, '@') == true && $member->active == 0) {
                 $m3_result->status = 5;
                 $m3_result->message = '邮箱尚未激活。';
                 return $m3_result->toJson();

@@ -37,7 +37,7 @@ Route::group(['middleware'=>'check.login'], function() {
     Route::get('/order_list', 'View\OrderController@toOrderList');
 });
 
-
+// 商品详情
 Route::get('/product/{product_id}', 'View\BookController@toPdtContent');
 
 // 购物车页面
